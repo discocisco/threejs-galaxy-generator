@@ -7,6 +7,7 @@ import GUI from "lil-gui";
  */
 // Debug
 const gui = new GUI({ width: 360 });
+gui.title("Galaxy Controls");
 
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
@@ -53,24 +54,29 @@ const generateGalaxy = () => {
   const outsideColor = new THREE.Color(parameters.outsideColor);
 
   for (let i = 0; i < parameters.count; i++) {
+    // Position
     const i3 = i * 3;
 
-    // Poisition
     const radius = Math.random() * parameters.radius;
     const spinAngle = radius * parameters.spin;
-    +spinAngle;
     const branchAngle =
       ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
 
     const randomX =
       Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1);
+      (Math.random() < 0.5 ? 1 : -1) *
+      parameters.randomness *
+      radius;
     const randomY =
       Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1);
+      (Math.random() < 0.5 ? 1 : -1) *
+      parameters.randomness *
+      radius;
     const randomZ =
       Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1);
+      (Math.random() < 0.5 ? 1 : -1) *
+      parameters.randomness *
+      radius;
 
     positions[i3 + 0] = Math.cos(branchAngle + spinAngle) * radius + randomX;
     positions[i3 + 1] = randomY;
@@ -108,36 +114,45 @@ const generateGalaxy = () => {
 
 generateGalaxy();
 
+/**
+ * GUI Controls
+ */
+
 gui
   .add(parameters, "count")
   .min(100)
   .max(1000000)
   .step(100)
-  .onFinishChange(generateGalaxy);
+  .onFinishChange(generateGalaxy)
+  .name("# of Stars");
 gui
   .add(parameters, "size")
   .min(0.001)
   .max(0.1)
   .step(0.001)
-  .onFinishChange(generateGalaxy);
+  .onFinishChange(generateGalaxy)
+  .name("Star Size");
 gui
   .add(parameters, "radius")
   .min(0.01)
   .max(20)
   .step(0.01)
-  .onFinishChange(generateGalaxy);
+  .onFinishChange(generateGalaxy)
+  .name("Galaxy Radius");
 gui
   .add(parameters, "branches")
   .min(2)
   .max(20)
   .step(1)
-  .onFinishChange(generateGalaxy);
+  .onFinishChange(generateGalaxy)
+  .name("Branches");
 gui
   .add(parameters, "spin")
   .min(-5)
   .max(5)
   .step(0.001)
-  .onFinishChange(generateGalaxy);
+  .onFinishChange(generateGalaxy)
+  .name("Spin");
 gui
   .add(parameters, "randomness")
   .min(0)
